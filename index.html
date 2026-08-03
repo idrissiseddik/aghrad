@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aghrad - Objets Perdus & Trouvés</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <style>
+        body {
+            background-color: #f8fafc;
+            padding-bottom: 70px;
+            padding-top: 70px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: justify;
+        }
+
+        p, span, h1, h2, h3, h4, h5, h6, .card-text, .comment-box p {
+            text-align: justify;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        [data-bs-theme="dark"] .fixed-header {
+            background: rgba(33, 37, 41, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 0.85rem;
+        }
+
+        [data-bs-theme="dark"] .fixed-footer {
+            background: rgba(33, 37, 41, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-annonce {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        [data-bs-theme="dark"] .card-annonce {
+            background: #2b3035;
+        }
+
+        .annonce-img-container {
+            height: 200px;
+            position: relative;
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        [data-bs-theme="dark"] .annonce-img-container {
+            background-color: #1a1d20;
+        }
+
+        .annonce-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .card-annonce:hover .annonce-img {
+            transform: scale(1.05);
+        }
+
+        #landingPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bs-body-bg);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px 20px 70px 20px;
+        }
+
+        .landing-content {
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .landing-content p, .landing-content h1, .landing-content h6 {
+            text-align: center !important;
+        }
+
+        .landing-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: var(--bs-body-bg);
+            border-top: 1px solid var(--bs-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2005;
+            font-size: 0.85rem;
+        }
+
+        .modal-fullscreen-custom .modal-content {
+            height: 100vh;
+            border: 0;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-fullscreen-custom .modal-header {
+            flex-shrink: 0;
+            background: var(--bs-body-bg);
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+
+        .modal-fullscreen-custom .modal-body {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-bottom: 190px;
+        }
+
+        .modal-fullscreen-custom .modal-footer {
+            flex-shrink: 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bs-body-bg);
+            border-top: 1px solid var(--bs-border-color);
+            z-index: 1040;
+            padding: 12px 16px;
+        }
+
+        .badge-perdu { background-color: #ef4444; color: white; }
+        .badge-trouve { background-color: #10b981; color: white; }
+
+        .comment-box {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-left: 3px solid #0d6efd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+        [data-bs-theme="dark"] .comment-box {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        #loadingOverlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(2px);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            flex-direction: column;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid var(--bs-border-color);
+        }
+
+        @media (max-width: 576px) {
+            .card-annonce .annonce-img-container {
+                height: 150px;
+            }
+        }
+
+        /* Bouton de rafraîchissement manuel */
+        .refresh-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1020;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bs-primary);
+            color: white;
+            border: none;
+            transition: transform 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay Chargement -->
+    <div id="loadingOverlay">
+        <div class="spinner-border text-light mb-2" role="status"></div>
+        <span class="fw-semibold">Chargement en cours...</span>
+    </div>
+
+    <!-- Landing Page Centrée -->
+    <div id="landingPage">
+        <div class="landing-content my-auto py-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow-lg" style="width: 75px; height: 75px;">
+                <i class="fa-solid fa-handshake fa-2x"></i>
+            </div>
+            
+            <h1 class="fw-bold text-primary mb-1">Aghrad</h1>
+            <p class="text-muted fw-semibold mb-3 small">Objets Perdus & Trouvés au Maroc<br>منصة الأغراض الضائعة والمعثور عليها بالمغرب</p>
+
+            <div class="card border-0 shadow-sm mb-3 bg-body-tertiary rounded-4 text-center p-3 w-100">
+                <div class="card-body p-1">
+                    <h6 class="fw-bold text-primary mb-1 text-center"><i class="fa-solid fa-circle-info me-1"></i> Bienvenue / أهلاً بك</h6>
+                    <p class="small text-secondary mb-2 text-center" style="text-align: center !important;">
+                        Aghrad est votre plateforme communautaire solidaire pour retrouver vos objets égarés ou restituer ce que vous avez trouvé dans toutes les villes du Maroc.
+                    </p>
+                    <p class="small text-secondary m-0 text-center" dir="rtl" style="text-align: center !important;">
+                        أغراض هي منصتك التضامنية لمساعدة بعضنا البعض في العثور على الأشياء الضائعة أو رد المفقودات لأصحابها في جميع مدن المغرب.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row g-2 mb-3 w-100">
+                <div class="col-6">
+                    <div class="p-3 border rounded-4 bg-body-tertiary h-100 d-flex flex-column align-items-center text-center">
+                        <i class="fa-solid fa-magnifying-glass-location text-danger fa-lg mb-2"></i>
+                        <h6 class="fw-bold small mb-1">Perdu ?</h6>
+                        <p class="text-muted m-0" style="font-size: 0.75rem; text-align: center !important;">Publiez une annonce détaillée avec photo pour alerter la communauté.</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-3 border rounded-4 bg-body-tertiary h-100 d-flex flex-column align-items-center text-center">
+                        <i class="fa-solid fa-hand-holding-heart text-success fa-lg mb-2"></i>
+                        <h6 class="fw-bold small mb-1">Trouvé ?</h6>
+                        <p class="text-muted m-0" style="font-size: 0.75rem; text-align: center !important;">Aidez un citoyen à retrouver son bien en partageant l'objet trouvé.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm" id="startAppBtn">
+                Commencer / ابدأ الان <i class="fa-solid fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+
+        <div class="landing-footer text-muted fw-medium">
+            Développé Par : M.Seddik ELidrissi
+        </div>
+    </div>
+
+    <!-- Header Fixe -->
+    <header class="fixed-header px-3 py-2 d-flex justify-content-between align-items-center shadow-sm">
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                <i class="fa-solid fa-handshake"></i>
+            </div>
+            <h5 class="m-0 fw-bold text-primary">Aghrad</h5>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#addAnnonceModal">
+                <i class="fa-solid fa-plus me-1"></i> Publier
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-circle" id="infoBtn" title="À propos">
+                <i class="fa-solid fa-info"></i>
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-circle" id="adminBtn" title="Espace Admin">
+                <i class="fa-solid fa-lock"></i>
+            </button>
+            <button class="btn btn-outline-secondary btn-sm rounded-circle" id="themeToggle" title="Changer le thème">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Contenu Principal -->
+    <main class="container my-3">
+        <div class="row g-2 mb-3">
+            <div class="col-7">
+                <select id="filterVille" class="form-select form-select-sm">
+                    <option value="">Toutes les villes / جميع المدن</option>
+                </select>
+            </div>
+            <div class="col-5">
+                <select id="filterStatus" class="form-select form-select-sm">
+                    <option value="">Tous les statuts</option>
+                    <option value="Perdu">Perdu / ضائع</option>
+                    <option value="Trouvé">Trouvé / معثور عليه</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row g-3" id="annoncesContainer"></div>
+    </main>
+
+    <!-- Footer Fixe -->
+    <footer class="fixed-footer py-2 px-3 text-center text-muted fw-medium">
+        Développé Par : M.Seddik ELidrissi
+    </footer>
+
+    <!-- Bouton de rafraîchissement manuel -->
+    <button class="refresh-btn" id="manualRefreshBtn" title="Rafraîchir les annonces">
+        <i class="fa-solid fa-rotate"></i>
+    </button>
+
+    <!-- Modal Ajouter Annonce -->
+    <div class="modal fade modal-fullscreen-custom" id="addAnnonceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-bullhorn text-primary me-2"></i> Nouvelle Annonce</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="annonceForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold"><i class="fa-solid fa-tag me-1"></i> Statut de l'objet</label>
+                            <select class="form-select" id="objetStatut" required>
+                                <option value="Perdu">Je l'ai perdu (Perdu)</option>
+                                <option value="Trouvé">Je l'ai trouvé (Trouvé)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold"><i class="fa-solid fa-heading me-1"></i> Titre de l'annonce</label>
+                            <input type="text" class="form-control" id="objetTitre" placeholder="Ex: Portefeuille en cuir noir" dir="auto" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold"><i class="fa-solid fa-city me-1"></i> Ville marocaine</label>
+                            <select class="form-select" id="objetVille" required>
+                                <option value="">Sélectionnez une ville</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold"><i class="fa-solid fa-image me-1"></i> Télécharger une photo</label>
+                            <input type="file" class="form-control" id="objetPhotoFile" accept="image/*" required>
+                            <div id="imagePreviewContainer" class="mt-2"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold"><i class="fa-solid fa-phone me-1"></i> Numéro WhatsApp / Téléphone</label>
+                            <input type="tel" class="form-control" id="objetContact" placeholder="Ex: +212600000000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold"><i class="fa-solid fa-align-left me-1"></i> Détails / Description</label>
+                            <textarea class="form-control" id="objetDetails" rows="3" placeholder="Donnez plus de précisions..." dir="auto" required style="text-align: justify;"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex gap-2 w-100">
+                        <button type="button" class="btn btn-danger w-50 rounded-pill py-2 fw-semibold" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark me-1"></i> Annuler
+                        </button>
+                        <button type="button" class="btn btn-success w-50 rounded-pill py-2 fw-semibold" id="saveAnnonceBtn">
+                            <i class="fa-solid fa-check me-1"></i> Publier
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Commentaires -->
+    <div class="modal fade modal-fullscreen-custom" id="commentsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold text-primary"><i class="fa-solid fa-comments me-2"></i> Commentaires de l'annonce</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="commentAnnonceHeaderInfo" class="mb-3 p-3 bg-light rounded-3 border"></div>
+                    <h6 class="fw-bold mb-3"><i class="fa-solid fa-list-ul me-1"></i> Discussions / التعليقات</h6>
+                    <div id="commentsList"></div>
+                </div>
+                <div class="modal-footer">
+                    <form id="commentForm" class="w-100">
+                        <input type="hidden" id="currentAnnonceId">
+                        <div class="mb-2">
+                            <input type="text" class="form-control form-control-sm" id="commentAuthor" placeholder="Votre nom / اسمك" dir="auto" required>
+                        </div>
+                        <div class="mb-2">
+                            <textarea class="form-control form-control-sm" id="commentText" rows="2" placeholder="Écrivez votre réponse... / اكتب ردك..." dir="auto" required style="text-align: justify;"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill fw-semibold py-2">
+                                <i class="fa-solid fa-paper-plane me-1"></i> Envoyer le commentaire / إرسال التعليق
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Espace Admin -->
+    <div class="modal fade modal-fullscreen-custom" id="adminModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-gauge-high me-2"></i> Tableau de bord Admin (Annonces & Commentaires)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="adminAnnoncesList" class="row g-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-100 rounded-pill py-2 fw-semibold" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Configuration - À MODIFIER AVEC VOTRE URL
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbywFsMVbkVQfbsQKK0-OpjXOJoujh4ILX7nPq4qt9g6qYfNRmck36sR3MPBlRu6HtBZ/exec";
+
+        const villesMaroc = [
+            "Agadir", "Al Hoceima", "Assa", "Azilal", "Ben Guerir", "Beni Mellal", "Berkane", 
+            "Berrechid", "Boujdour", "Boulemane", "Casablanca", "Chefchaouen", "Dakhla", 
+            "El Jadida", "Errachidia", "Es-Semara", "Essaouira", "Fès", "Figuig", "Guelmim", 
+            "Ifrane", "Kelaat Sraghna", "Kénitra", "Khémisset", "Khouribga", "Laâyoune", 
+            "Larache", "Marrakech", "Martil", "Meknès", "Midelt", "Mohammedia", "Nador", 
+            "Ouarzazate", "Oujda", "Rabat", "Safi", "Salé", "Sefrou", "Settat", "Sidi Bennour", 
+            "Sidi Ifni", "Sidi Kacem", "Sidi Slimane", "Témara", "Tantan", "Taounate", "Taroudant", 
+            "Tata", "Taza", "Tétouan", "Tinghir", "Tiznit", "Youssoufia", "Zagora"
+        ];
+
+        function populateVilles() {
+            const selectFilter = document.getElementById('filterVille');
+            const selectModal = document.getElementById('objetVille');
+            villesMaroc.forEach(ville => {
+                selectFilter.innerHTML += `<option value="${ville}">${ville}</option>`;
+                selectModal.innerHTML += `<option value="${ville}">${ville}</option>`;
+            });
+        }
+        populateVilles();
+
+        let annonces = [];
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        async function fetchAnnonces() {
+            showLoading(true);
+            try {
+                const response = await fetch(WEB_APP_URL + "?t=" + new Date().getTime(), {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (Array.isArray(data)) {
+                    annonces = data.reverse();
+                } else if (data.data && Array.isArray(data.data)) {
+                    annonces = data.data.reverse();
+                } else {
+                    annonces = [];
+                }
+                
+                renderAnnonces();
+            } catch (err) {
+                console.error("Erreur de chargement:", err);
+                const container = document.getElementById('annoncesContainer');
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5 my-5 text-muted d-flex flex-column align-items-center justify-content-center" style="min-height: 50vh;">
+                        <i class="fa-solid fa-cloud-slash fa-3x mb-3 text-secondary"></i>
+                        <h5 class="fw-semibold mb-1">Impossible de charger les annonces</h5>
+                        <p class="small text-muted">Vérifiez l'URL du Web App et le déploiement Google Apps Script</p>
+                        <button class="btn btn-primary btn-sm mt-3 rounded-pill" onclick="fetchAnnonces()">
+                            <i class="fa-solid fa-rotate me-1"></i> Réessayer
+                        </button>
+                    </div>
+                `;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Fonction pour rafraîchir manuellement (avec animation)
+        async function manualRefresh() {
+            const btn = document.getElementById('manualRefreshBtn');
+            btn.style.transform = 'rotate(180deg)';
+            await fetchAnnonces();
+            btn.style.transform = 'rotate(0deg)';
+        }
+
+        const landingPage = document.getElementById('landingPage');
+        document.getElementById('startAppBtn').addEventListener('click', () => {
+            landingPage.style.transition = 'opacity 0.3s ease';
+            landingPage.style.opacity = '0';
+            setTimeout(() => { landingPage.style.display = 'none'; }, 300);
+        });
+
+        document.getElementById('infoBtn').addEventListener('click', () => {
+            landingPage.style.display = 'flex';
+            landingPage.style.opacity = '1';
+        });
+
+        // Bouton de rafraîchissement manuel
+        document.getElementById('manualRefreshBtn').addEventListener('click', manualRefresh);
+
+        // Preview image avant upload
+        document.getElementById('objetPhotoFile').addEventListener('change', function(e) {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-preview';
+                    img.alt = 'Aperçu de l\'image';
+                    container.appendChild(img);
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        function renderAnnonces(villeFilter = '', statusFilter = '') {
+            const container = document.getElementById('annoncesContainer');
+            container.innerHTML = '';
+
+            if (!Array.isArray(annonces)) {
+                return;
+            }
+
+            const filtered = annonces.filter(item => {
+                const matchesVille = villeFilter === '' || item.ville === villeFilter;
+                const matchesStatus = statusFilter === '' || item.statut === statusFilter;
+                return matchesVille && matchesStatus;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5 my-5 text-muted d-flex flex-column align-items-center justify-content-center" style="min-height: 50vh;">
+                        <i class="fa-solid fa-box-open fa-3x mb-3 text-secondary"></i>
+                        <h5 class="fw-semibold mb-1">Aucune annonce trouvée</h5>
+                        <p class="small text-muted">لا توجد إعلانات مطابقة لخيارات البحث</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const badgeClass = item.statut === 'Perdu' ? 'badge-perdu' : 'badge-trouve';
+                const commentCount = item.comments ? item.comments.length : 0;
+                
+                // Utiliser directement l'URL de l'image
+                let photoSrc = item.photoUrl;
+                if (!photoSrc || photoSrc === '') {
+                    photoSrc = 'https://via.placeholder.com/500?text=Image+Indisponible';
+                }
+                
+                const contact = item.contact ? String(item.contact) : '';
+                const phoneNumber = contact.replace(/[^0-9]/g, '');
+                const encodedTitre = encodeURIComponent(item.titre || '');
+
+                const card = `
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card card-annonce h-100">
+                            <div class="annonce-img-container">
+                                <img src="${photoSrc}" class="annonce-img" alt="${escapeHtml(item.titre || 'Sans titre')}" onerror="this.src='https://via.placeholder.com/500?text=Image+Indisponible'">
+                                <span class="position-absolute top-0 end-0 m-2 badge ${badgeClass} px-3 py-2 rounded-pill shadow-sm">
+                                    ${item.statut || 'Non défini'}
+                                </span>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title fw-bold text-truncate" dir="auto">${escapeHtml(item.titre || 'Sans titre')}</h5>
+                                <p class="card-text text-muted small mb-2">
+                                    <i class="fa-solid fa-location-dot text-danger me-1"></i> ${escapeHtml(item.ville || 'Non spécifiée')}
+                                </p>
+                                <p class="card-text small flex-grow-1 text-secondary" dir="auto" style="white-space: pre-wrap; text-align: justify;">${escapeHtml(item.details || 'Aucun détail')}</p>
+                                <div class="d-flex gap-1 mt-3">
+                                    <a href="tel:${contact}" class="btn btn-outline-primary btn-sm flex-fill rounded-pill" title="Appeler">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </a>
+                                    <a href="https://wa.me/${phoneNumber}?text=Bonjour,%20je%20vous%20contacte%20concernant%20votre%20annonce:%20${encodedTitre}" target="_blank" class="btn btn-success btn-sm flex-fill rounded-pill" title="WhatsApp">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </a>
+                                    <button class="btn btn-outline-secondary btn-sm flex-fill rounded-pill position-relative" onclick="openComments(${item.id})" title="Commentaires">
+                                        <i class="fa-solid fa-comment"></i>
+                                        ${commentCount > 0 ? `<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">${commentCount}</span>` : ''}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        document.getElementById('saveAnnonceBtn').addEventListener('click', function() {
+            const statut = document.getElementById('objetStatut').value;
+            const titre = document.getElementById('objetTitre').value.trim();
+            const ville = document.getElementById('objetVille').value;
+            const photoInput = document.getElementById('objetPhotoFile');
+            const contact = document.getElementById('objetContact').value.trim();
+            const details = document.getElementById('objetDetails').value.trim();
+
+            if (!titre || !ville || !contact || !details || photoInput.files.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Champs requis',
+                    text: 'Veuillez remplir tous les champs et sélectionner une photo.',
+                    confirmButtonColor: '#6366f1'
+                });
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const payload = {
+                    action: "addAnnonce",
+                    id: Date.now(),
+                    statut,
+                    titre,
+                    ville,
+                    photoBase64: e.target.result,
+                    contact,
+                    details,
+                    comments: []
+                };
+
+                showLoading(true);
+                try {
+                    const response = await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        bootstrap.Modal.getInstance(document.getElementById('addAnnonceModal')).hide();
+                        document.getElementById('annonceForm').reset();
+                        document.getElementById('imagePreviewContainer').innerHTML = '';
+                        await fetchAnnonces();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Succès !',
+                            text: 'Votre annonce a été publiée dans le cloud.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        throw new Error(result.message || 'Erreur inconnue');
+                    }
+                } catch (err) {
+                    console.error("Erreur lors de la publication:", err);
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Erreur', 
+                        text: 'Impossible de publier dans le cloud. Vérifiez l\'URL du Web App.' 
+                    });
+                } finally {
+                    showLoading(false);
+                }
+            };
+            reader.readAsDataURL(photoInput.files[0]);
+        });
+
+        function openComments(id) {
+            document.getElementById('currentAnnonceId').value = id;
+            renderCommentsModalContent(id);
+            new bootstrap.Modal(document.getElementById('commentsModal')).show();
+        }
+
+        function renderCommentsModalContent(annonceId) {
+            const annonce = annonces.find(item => item.id == annonceId);
+            if (!annonce) {
+                document.getElementById('commentAnnonceHeaderInfo').innerHTML = `<p class="text-danger">Annonce non trouvée</p>`;
+                return;
+            }
+
+            let photoSrc = annonce.photoUrl;
+            if (!photoSrc || photoSrc === '') {
+                photoSrc = 'https://via.placeholder.com/50';
+            }
+
+            const headerInfo = document.getElementById('commentAnnonceHeaderInfo');
+            headerInfo.innerHTML = `
+                <div class="d-flex align-items-center gap-3">
+                    <img src="${photoSrc}" width="50" height="50" class="rounded object-fit-contain bg-light border shadow-sm" onerror="this.src='https://via.placeholder.com/50'">
+                    <div>
+                        <h6 class="fw-bold mb-1" dir="auto">${escapeHtml(annonce.titre || 'Sans titre')}</h6>
+                        <span class="badge ${annonce.statut === 'Perdu' ? 'badge-perdu' : 'badge-trouve'} me-2">${annonce.statut || 'Non défini'}</span>
+                        <span class="text-muted small"><i class="fa-solid fa-location-dot text-danger"></i> ${escapeHtml(annonce.ville || 'Non spécifiée')}</span>
+                    </div>
+                </div>
+            `;
+
+            const listContainer = document.getElementById('commentsList');
+            listContainer.innerHTML = '';
+
+            if (!annonce.comments || annonce.comments.length === 0) {
+                listContainer.innerHTML = `<p class="text-muted text-center py-4 small">Aucun commentaire pour le moment. Soyez le premier à répondre ! / لا توجد تعليقات بعد.</p>`;
+                return;
+            }
+
+            annonce.comments.forEach(c => {
+                listContainer.innerHTML += `
+                    <div class="comment-box">
+                        <div class="fw-bold small text-primary mb-1" dir="auto"><i class="fa-solid fa-user-circle me-1"></i> ${escapeHtml(c.author || 'Anonyme')}</div>
+                        <p class="mb-0 small text-secondary" dir="auto" style="white-space: pre-wrap;">${escapeHtml(c.text || '')}</p>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('commentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const annonceId = document.getElementById('currentAnnonceId').value;
+            const author = document.getElementById('commentAuthor').value.trim();
+            const text = document.getElementById('commentText').value.trim();
+
+            if (!author || !text) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Champs requis',
+                    text: 'Veuillez remplir votre nom et votre commentaire.',
+                    confirmButtonColor: '#6366f1'
+                });
+                return;
+            }
+
+            const payload = {
+                action: "addComment",
+                annonceId,
+                author,
+                text
+            };
+
+            showLoading(true);
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                document.getElementById('commentText').value = '';
+                await fetchAnnonces();
+                renderCommentsModalContent(annonceId);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Commentaire ajouté',
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+            } catch (err) {
+                console.error("Erreur lors de l'ajout du commentaire:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Impossible d\'ajouter le commentaire.',
+                    confirmButtonColor: '#6366f1'
+                });
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        document.getElementById('filterVille').addEventListener('change', (e) => {
+            renderAnnonces(e.target.value, document.getElementById('filterStatus').value);
+        });
+
+        document.getElementById('filterStatus').addEventListener('change', (e) => {
+            renderAnnonces(document.getElementById('filterVille').value, e.target.value);
+        });
+
+        document.getElementById('adminBtn').addEventListener('click', async () => {
+            const { value: password } = await Swal.fire({
+                title: 'Espace Administrateur',
+                input: 'password',
+                inputPlaceholder: 'Entrez le mot de passe',
+                confirmButtonText: 'Connexion',
+                cancelButtonText: 'Annuler',
+                showCancelButton: true,
+                confirmButtonColor: '#6366f1'
+            });
+
+            if (password === 'Seddik') {
+                renderAdminDashboard();
+                new bootstrap.Modal(document.getElementById('adminModal')).show();
+            } else if (password !== undefined) {
+                Swal.fire({ icon: 'error', title: 'Accès refusé', text: 'Mot de passe incorrect.' });
+            }
+        });
+
+        function renderAdminDashboard() {
+            const container = document.getElementById('adminAnnoncesList');
+            container.innerHTML = '';
+
+            if (!Array.isArray(annonces) || annonces.length === 0) {
+                container.innerHTML = `<div class="col-12 text-center text-muted py-5">Aucune annonce enregistrée dans le cloud.</div>`;
+                return;
+            }
+
+            annonces.forEach(item => {
+                let photoSrc = item.photoUrl;
+                if (!photoSrc || photoSrc === '') {
+                    photoSrc = 'https://via.placeholder.com/80';
+                }
+
+                let commentsHtml = '';
+                if (item.comments && item.comments.length > 0) {
+                    item.comments.forEach(c => {
+                        commentsHtml += `
+                            <div class="d-flex justify-content-between align-items-center bg-body-tertiary p-2 rounded mb-2 border">
+                                <div class="small" dir="auto">
+                                    <strong class="text-primary">${escapeHtml(c.author || 'Anonyme')} :</strong> ${escapeHtml(c.text || '')}
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-2 py-0" style="font-size: 0.75rem;" onclick="deleteCommentAdmin(${item.id}, ${c.id})">
+                                    <i class="fa-solid fa-trash"></i> Supprimer
+                                </button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    commentsHtml = `<p class="text-muted small italic m-0">Aucun commentaire sur cette annonce.</p>`;
+                }
+
+                container.innerHTML += `
+                    <div class="col-12">
+                        <div class="card border shadow-sm rounded-4 p-3 bg-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center mb-2 mb-md-0">
+                                    <img src="${photoSrc}" width="80" height="80" class="rounded object-fit-contain bg-light border shadow-sm" onerror="this.src='https://via.placeholder.com/80'">
+                                </div>
+                                <div class="col-md-7">
+                                    <h5 class="fw-bold mb-1" dir="auto">${escapeHtml(item.titre || 'Sans titre')}</h5>
+                                    <p class="text-muted small mb-1"><i class="fa-solid fa-location-dot text-danger"></i> ${escapeHtml(item.ville || 'Non spécifiée')} | <span class="badge ${item.statut === 'Perdu' ? 'badge-perdu' : 'badge-trouve'}">${item.statut || 'Non défini'}</span></p>
+                                    <p class="small text-secondary mb-0" dir="auto">${escapeHtml(item.details || 'Aucun détail')}</p>
+                                </div>
+                                <div class="col-md-3 text-end mt-2 mt-md-0">
+                                    <button class="btn btn-danger btn-sm rounded-pill px-3 w-100 shadow-sm" onclick="deleteAnnonce(${item.id})">
+                                        <i class="fa-solid fa-trash me-1"></i> Supprimer l'annonce
+                                    </button>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                            <div>
+                                <h6 class="fw-bold small text-primary mb-2"><i class="fa-solid fa-comments me-1"></i> Gestion des Commentaires (${item.comments ? item.comments.length : 0})</h6>
+                                <div class="ps-2 border-start border-3 border-primary">
+                                    ${commentsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function deleteCommentAdmin(annonceId, commentId) {
+            const result = await Swal.fire({
+                title: 'Supprimer ce commentaire ?',
+                text: "Cette action est irréversible.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler'
+            });
+
+            if (result.isConfirmed) {
+                showLoading(true);
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: "deleteComment", annonceId, commentId })
+                    });
+                    await fetchAnnonces();
+                    renderAdminDashboard();
+                    Swal.fire('Supprimé !', 'Le commentaire a été effacé.', 'success');
+                } catch(err) {
+                    Swal.fire('Erreur', 'Impossible de supprimer le commentaire.', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            }
+        }
+
+        async function deleteAnnonce(id) {
+            const result = await Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                text: "Cette action supprimera définitivement cette annonce et tous ses commentaires.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler'
+            });
+
+            if (result.isConfirmed) {
+                showLoading(true);
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: "deleteAnnonce", annonceId: id })
+                    });
+                    await fetchAnnonces();
+                    renderAdminDashboard();
+                    Swal.fire('Supprimé !', 'L\'annonce a été effacée avec succès.', 'success');
+                } catch(err) {
+                    Swal.fire('Erreur', 'Impossible de supprimer.', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            }
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+        });
+
+        // Initialisation - chargement unique au démarrage
+        fetchAnnonces();
+
+        // SUPPRESSION de la synchronisation automatique
+        // setInterval(fetchAnnonces, 30000); // Supprimé
+    </script>
+</body>
+</html>

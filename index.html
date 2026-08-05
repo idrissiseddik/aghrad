@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-bs-theme="light">
+<html lang="fr" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +10,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Google Fonts pour un style islamique élégant -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     
     <style>
         body {
-            background-color: #f8fafc;
+            background-color: #1a1d20;
+            color: #e9ecef;
             padding-bottom: 70px;
             padding-top: 70px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: justify;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        [data-bs-theme="light"] body {
+            background-color: #f8fafc;
+            color: #212529;
         }
 
         p, span, h1, h2, h3, h4, h5, h6, .card-text, .comment-box p {
@@ -32,14 +41,15 @@
             left: 0;
             right: 0;
             z-index: 1030;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(33, 37, 41, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s, border-color 0.3s;
         }
 
-        [data-bs-theme="dark"] .fixed-header {
-            background: rgba(33, 37, 41, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        [data-bs-theme="light"] .fixed-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .fixed-footer {
@@ -48,50 +58,57 @@
             left: 0;
             right: 0;
             z-index: 1030;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(33, 37, 41, 0.95);
             backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             font-size: 0.85rem;
+            color: #adb5bd;
+            transition: background 0.3s, border-color 0.3s;
         }
 
-        [data-bs-theme="dark"] .fixed-footer {
-            background: rgba(33, 37, 41, 0.95);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        [data-bs-theme="light"] .fixed-footer {
+            background: rgba(255, 255, 255, 0.95);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: #6c757d;
         }
 
         .card-annonce {
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s, border-color 0.3s;
             overflow: hidden;
-            background: #ffffff;
+            background: #2b3035;
             cursor: pointer;
         }
 
-        [data-bs-theme="dark"] .card-annonce {
-            background: #2b3035;
+        [data-bs-theme="light"] .card-annonce {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .annonce-img-container {
             height: 200px;
+            width: 100%;
             position: relative;
-            background-color: #f1f5f9;
+            background-color: #1a1d20;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             cursor: pointer;
+            transition: background 0.3s;
         }
 
-        [data-bs-theme="dark"] .annonce-img-container {
-            background-color: #1a1d20;
+        [data-bs-theme="light"] .annonce-img-container {
+            background-color: #f1f5f9;
         }
 
         .annonce-img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             transition: transform 0.3s ease;
         }
 
@@ -142,6 +159,11 @@
             justify-content: center;
             z-index: 2005;
             font-size: 0.85rem;
+            color: #adb5bd;
+        }
+
+        [data-bs-theme="light"] .landing-footer {
+            color: #6c757d;
         }
 
         .modal-fullscreen-custom .modal-content {
@@ -154,6 +176,11 @@
 
         .modal-fullscreen-custom .modal-header {
             flex-shrink: 0;
+            background: #2b3035;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        [data-bs-theme="light"] .modal-fullscreen-custom .modal-header {
             background: var(--bs-body-bg);
             border-bottom: 1px solid var(--bs-border-color);
         }
@@ -162,6 +189,11 @@
             overflow-y: auto;
             flex-grow: 1;
             padding-bottom: 190px;
+            background: #2b3035;
+        }
+
+        [data-bs-theme="light"] .modal-fullscreen-custom .modal-body {
+            background: var(--bs-body-bg);
         }
 
         .modal-fullscreen-custom .modal-footer {
@@ -170,25 +202,37 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--bs-body-bg);
-            border-top: 1px solid var(--bs-border-color);
+            background: #2b3035;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             z-index: 1040;
             padding: 12px 16px;
+        }
+
+        [data-bs-theme="light"] .modal-fullscreen-custom .modal-footer {
+            background: var(--bs-body-bg);
+            border-top: 1px solid var(--bs-border-color);
+        }
+
+        [data-bs-theme="light"] .modal-fullscreen-custom .modal-content {
+            background: var(--bs-body-bg);
         }
 
         .badge-perdu { background-color: #ef4444; color: white; }
         .badge-trouve { background-color: #10b981; color: white; }
 
         .comment-box {
-            background-color: rgba(0, 0, 0, 0.02);
-            border-left: 3px solid #0d6efd;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #4d8cf7;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 10px;
             text-align: justify;
+            transition: background 0.3s;
         }
-        [data-bs-theme="dark"] .comment-box {
-            background-color: rgba(255, 255, 255, 0.03);
+
+        [data-bs-theme="light"] .comment-box {
+            background-color: rgba(0, 0, 0, 0.02);
+            border-left-color: #0d6efd;
         }
 
         /* ===== LOADING OVERLAY PLEIN ÉCRAN ===== */
@@ -205,6 +249,18 @@
             align-items: center;
             flex-direction: column;
             color: white;
+            padding: 20px;
+        }
+
+        .loading-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            flex: 1;
+            padding: 20px 0;
         }
 
         .loading-icon {
@@ -219,7 +275,7 @@
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             animation: pulseIcon 2s ease-in-out infinite;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 0 60px rgba(255, 255, 255, 0.1);
         }
 
@@ -240,9 +296,99 @@
             font-size: 1rem;
             opacity: 0.8;
             font-weight: 300;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
         }
+
+        /* ===== STYLE DU VERSET CORANIQUE DANS LE LOADING ===== */
+        .loading-verse-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 10px auto 20px auto;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-verse-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffffff, #10b981, #ffffff);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .loading-verse-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+            text-align: center !important;
+            margin: 0;
+            padding: 5px 0;
+            direction: rtl;
+            font-weight: 400;
+        }
+
+        .loading-verse-text .highlight {
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .loading-verse-reference {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center !important;
+            margin-top: 5px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .loading-verse-reference i {
+            margin: 0 4px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 576px) {
+            .loading-verse-text {
+                font-size: 0.9rem;
+                line-height: 1.7;
+            }
+            .loading-verse-container {
+                padding: 12px 15px;
+                margin: 5px auto 15px auto;
+            }
+            .loading-verse-reference {
+                font-size: 0.6rem;
+            }
+            .loading-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.8rem;
+            }
+            .loading-title {
+                font-size: 1.4rem;
+            }
+            .loading-subtitle {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ===== FIN STYLE VERSET LOADING ===== */
 
         .loading-spinner {
             width: 40px;
@@ -251,7 +397,7 @@
             border-top: 3px solid #ffffff;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         @keyframes spin {
@@ -268,6 +414,32 @@
 
         .loading-message i {
             margin-right: 8px;
+        }
+
+        /* ===== FOOTER DANS LE LOADING ===== */
+        .loading-footer {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px 0 5px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: auto;
+        }
+
+        .loading-footer i {
+            margin: 0 6px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 576px) {
+            .loading-footer {
+                font-size: 0.7rem;
+                padding: 12px 0 5px 0;
+            }
         }
 
         /* ===== MODAL IMAGE PLEIN ÉCRAN ===== */
@@ -378,19 +550,9 @@
                 white-space: normal;
                 max-width: 90%;
             }
-            .loading-icon {
-                width: 80px;
-                height: 80px;
-                font-size: 2.8rem;
-            }
-            .loading-title {
-                font-size: 1.4rem;
-            }
-            .loading-subtitle {
-                font-size: 0.85rem;
-            }
-            .card-annonce .annonce-img-container {
-                height: 150px;
+            .annonce-img-container {
+                height: 150px !important;
+                width: 100% !important;
             }
         }
 
@@ -442,10 +604,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #adb5bd;
+            color: #6c757d;
             height: 100%;
             width: 100%;
         }
+
+        [data-bs-theme="light"] .no-image-placeholder {
+            color: #adb5bd;
+        }
+
         .no-image-placeholder i {
             font-size: 3rem;
             margin-bottom: 0.5rem;
@@ -454,20 +621,271 @@
             font-size: 0.85rem;
             font-weight: 500;
         }
+
+        /* Mode sombre pour les sélecteurs et inputs */
+        .form-select,
+        .form-control,
+        textarea {
+            background-color: #2b3035;
+            color: #e9ecef;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-bs-theme="light"] .form-select,
+        [data-bs-theme="light"] .form-control,
+        [data-bs-theme="light"] textarea {
+            background-color: #ffffff;
+            color: #212529;
+            border-color: #ced4da;
+        }
+
+        .form-select:focus,
+        .form-control:focus,
+        textarea:focus {
+            background-color: #2b3035;
+            color: #e9ecef;
+            border-color: #0d6efd;
+        }
+
+        [data-bs-theme="light"] .form-select:focus,
+        [data-bs-theme="light"] .form-control:focus,
+        [data-bs-theme="light"] textarea:focus {
+            background-color: #ffffff;
+            color: #212529;
+            border-color: #0d6efd;
+        }
+
+        .form-select option {
+            background-color: #2b3035;
+            color: #e9ecef;
+        }
+
+        [data-bs-theme="light"] .form-select option {
+            background-color: #ffffff;
+            color: #212529;
+        }
+
+        .text-secondary {
+            color: #adb5bd !important;
+        }
+
+        [data-bs-theme="light"] .text-secondary {
+            color: #6c757d !important;
+        }
+
+        .text-muted {
+            color: #adb5bd !important;
+        }
+
+        [data-bs-theme="light"] .text-muted {
+            color: #6c757d !important;
+        }
+
+        .bg-light {
+            background-color: #2b3035 !important;
+        }
+
+        [data-bs-theme="light"] .bg-light {
+            background-color: #f8f9fa !important;
+        }
+
+        .bg-body-tertiary {
+            background-color: #2b3035 !important;
+        }
+
+        [data-bs-theme="light"] .bg-body-tertiary {
+            background-color: #f8f9fa !important;
+        }
+
+        .border {
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        [data-bs-theme="light"] .border {
+            border-color: #dee2e6 !important;
+        }
+
+        .btn-outline-secondary {
+            color: #adb5bd;
+            border-color: #495057;
+        }
+
+        [data-bs-theme="light"] .btn-outline-secondary {
+            color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #495057;
+            color: #fff;
+        }
+
+        [data-bs-theme="light"] .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .bg-primary {
+            background-color: #0d6efd !important;
+        }
+
+        .text-primary {
+            color: #4d8cf7 !important;
+        }
+
+        [data-bs-theme="light"] .text-primary {
+            color: #0d6efd !important;
+        }
+
+        /* Style pour les cartes en mode sombre */
+        .card-annonce .card-title {
+            color: #e9ecef !important;
+        }
+
+        [data-bs-theme="light"] .card-annonce .card-title {
+            color: #212529 !important;
+        }
+
+        .card-annonce .card-text {
+            color: #adb5bd !important;
+        }
+
+        [data-bs-theme="light"] .card-annonce .card-text {
+            color: #6c757d !important;
+        }
+
+        .comment-box .text-secondary {
+            color: #ced4da !important;
+        }
+
+        [data-bs-theme="light"] .comment-box .text-secondary {
+            color: #6c757d !important;
+        }
+
+        #commentAnnonceHeaderInfo {
+            background: #2b3035 !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        [data-bs-theme="light"] #commentAnnonceHeaderInfo {
+            background: #f8f9fa !important;
+            border-color: #dee2e6 !important;
+        }
+
+        /* Style du titre avec badge à gauche */
+        .card-title-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .card-title-wrapper .badge {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .card-title-wrapper .card-title {
+            flex: 1;
+            min-width: 0;
+            margin-bottom: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4;
+            max-height: 2.8em;
+            word-break: break-word;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .card-title-wrapper .card-title:hover {
+            color: #4d8cf7 !important;
+        }
+
+        .card-title.full-text {
+            display: block !important;
+            -webkit-line-clamp: unset !important;
+            -webkit-box-orient: unset !important;
+            overflow: visible !important;
+            max-height: none !important;
+            white-space: normal !important;
+            animation: expandTitle 0.3s ease;
+        }
+
+        @keyframes expandTitle {
+            from { opacity: 0.7; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Ajustement pour le mode sombre de l'admin */
+        [data-bs-theme="dark"] .modal-header.bg-dark {
+            background-color: #1a1d20 !important;
+        }
+
+        [data-bs-theme="dark"] .btn-close-white {
+            filter: invert(1);
+        }
+
+        /* Style pour l'aperçu de l'image */
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-bs-theme="light"] .image-preview {
+            border-color: #dee2e6;
+        }
+
+        /* Style pour le titre complet */
+        .title-full-display {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .title-full-display:hover {
+            color: #4d8cf7 !important;
+        }
     </style>
 </head>
 <body>
 
-    <!-- ===== LOADING OVERLAY PLEIN ÉCRAN ===== -->
+    <!-- ===== LOADING OVERLAY PLEIN ÉCRAN AVEC VERSET ET FOOTER ===== -->
     <div id="loadingOverlay">
-        <div class="loading-icon">
-            <i class="fa-solid fa-handshake"></i>
+        <div class="loading-content">
+            <div class="loading-icon">
+                <i class="fa-solid fa-handshake"></i>
+            </div>
+            <div class="loading-title">Aghrad</div>
+            <div class="loading-subtitle">Objets Perdus &amp; Trouvés</div>
+            
+            <!-- ===== VERSET CORANIQUE DANS LE LOADING ===== -->
+            <div class="loading-verse-container">
+                <p class="loading-verse-text">
+                    ﴿ إِنَّ اللَّهَ يَأْمُرُكُمْ أَنْ تُؤَدُّوا الْأَمَانَاتِ إِلَىٰ أَهْلِهَا<br>
+                    وَإِذَا حَكَمْتُمْ بَيْنَ النَّاسِ أَنْ تَحْكُمُوا بِالْعَدْلِ<br>
+                    ۚ إِنَّ اللَّهَ نِعِمَّا يَعِظُكُمْ بِهِ ۗ<br>
+                    إِنَّ اللَّهَ كَانَ سَمِيعًا بَصِيرًا ﴾
+                </p>
+                <div class="loading-verse-reference">
+                    <i class="fa-solid fa-arrow-left"></i> سورة النساء - الآية 58 <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+            <!-- ===== FIN VERSET ===== -->
+            
+            <div class="loading-spinner"></div>
+            <div class="loading-message">
+                <i class="fa-solid fa-clock"></i> Merci de patienter...
+            </div>
         </div>
-        <div class="loading-title">Aghrad</div>
-        <div class="loading-subtitle">Objets Perdus &amp; Trouvés</div>
-        <div class="loading-spinner"></div>
-        <div class="loading-message">
-            <i class="fa-solid fa-clock"></i> Merci de patienter...
+
+        <!-- ===== FOOTER DANS LE LOADING ===== -->
+        <div class="loading-footer">
+            <i class="fa-solid fa-code"></i> Développé Par : M.Seddik ELidrissi <i class="fa-solid fa-heart" style="color: rgba(255, 100, 100, 0.6);"></i>
         </div>
     </div>
 
@@ -482,7 +900,7 @@
         <div class="viewer-info" id="viewerInfo">Aghrad - Objets Perdus &amp; Trouvés</div>
     </div>
 
-    <!-- Landing Page Centrée -->
+    <!-- Landing Page Centrée (SANS le verset) -->
     <div id="landingPage">
         <div class="landing-content my-auto py-3">
             <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow-lg" style="width: 75px; height: 75px;">
@@ -550,7 +968,7 @@
                 <i class="fa-solid fa-lock"></i>
             </button>
             <button class="btn btn-outline-secondary btn-sm rounded-circle" id="themeToggle" title="Changer le thème">
-                <i class="fa-solid fa-moon"></i>
+                <i class="fa-solid fa-sun"></i>
             </button>
         </div>
     </header>
@@ -585,8 +1003,8 @@
         <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-bullhorn text-primary me-2"></i> Nouvelle Annonce</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold text-primary"><i class="fa-solid fa-bullhorn text-primary me-2"></i> Nouvelle Annonce</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="annonceForm" novalidate>
@@ -647,7 +1065,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold text-primary"><i class="fa-solid fa-comments me-2"></i> Commentaires de l'annonce</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div id="commentAnnonceHeaderInfo" class="mb-3 p-3 bg-light rounded-3 border"></div>
@@ -734,18 +1152,52 @@
 
         // Fonction pour formater la date
         function formatDate(dateString) {
-            if (!dateString) return 'Date inconnue';
+            if (!dateString) {
+                return 'Date inconnue';
+            }
+            
             try {
-                const date = new Date(dateString);
-                if (isNaN(date.getTime())) return 'Date inconnue';
-                return date.toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
+                if (typeof dateString === 'number') {
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) {
+                        return 'Date inconnue';
+                    }
+                    return date.toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+                
+                if (typeof dateString === 'string') {
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) {
+                        const parsed = Date.parse(dateString);
+                        if (!isNaN(parsed)) {
+                            const date2 = new Date(parsed);
+                            return date2.toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                        return 'Date inconnue';
+                    }
+                    return date.toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+                return 'Date inconnue';
             } catch (e) {
+                console.warn('Erreur de formatage de date:', e);
                 return 'Date inconnue';
             }
         }
@@ -1004,6 +1456,34 @@
             }
         }
 
+        // Fonction pour basculer l'affichage du titre complet
+        function toggleTitle(element) {
+            const title = element;
+            const isExpanded = title.classList.contains('full-text');
+            
+            if (isExpanded) {
+                title.classList.remove('full-text');
+                title.style.display = '-webkit-box';
+                title.style.webkitLineClamp = '2';
+                title.style.webkitBoxOrient = 'vertical';
+                title.style.overflow = 'hidden';
+                title.style.textOverflow = 'ellipsis';
+                title.style.maxHeight = '2.8em';
+                title.style.whiteSpace = 'normal';
+            } else {
+                title.classList.add('full-text');
+                title.style.display = 'block';
+                title.style.webkitLineClamp = 'unset';
+                title.style.webkitBoxOrient = 'unset';
+                title.style.overflow = 'visible';
+                title.style.textOverflow = 'unset';
+                title.style.maxHeight = 'none';
+                title.style.whiteSpace = 'normal';
+            }
+            
+            event.stopPropagation();
+        }
+
         function renderAnnonces(villeFilter = '', statusFilter = '') {
             const container = document.getElementById('annoncesContainer');
             container.innerHTML = '';
@@ -1062,15 +1542,19 @@
                         <div class="card card-annonce h-100">
                             <div class="annonce-img-container" ${imageClickAttr}>
                                 ${photoContent}
-                                <span class="position-absolute top-0 end-0 m-2 badge ${badgeClass} px-3 py-2 rounded-pill shadow-sm">
-                                    ${item.statut || 'Non défini'}
-                                </span>
                                 ${clickableImage ? `<span class="position-absolute bottom-0 start-0 m-2 badge bg-dark bg-opacity-50 px-3 py-1 rounded-pill" style="font-size: 0.65rem;">
                                     <i class="fa-solid fa-expand"></i> Agrandir
                                 </span>` : ''}
                             </div>
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-bold text-truncate" dir="auto">${escapeHtml(item.titre || 'Sans titre')}</h5>
+                                <div class="card-title-wrapper">
+                                    <span class="badge ${badgeClass} px-3 py-2 rounded-pill shadow-sm flex-shrink-0">
+                                        ${item.statut || 'Non défini'}
+                                    </span>
+                                    <h5 class="card-title fw-bold" dir="auto" onclick="toggleTitle(this)" title="Cliquez pour voir le titre complet">
+                                        ${escapeHtml(item.titre || 'Sans titre')}
+                                    </h5>
+                                </div>
                                 <p class="card-text text-muted small mb-1">
                                     <i class="fa-solid fa-location-dot text-danger me-1"></i> ${escapeHtml(item.ville || 'Non spécifiée')}
                                 </p>
@@ -1095,6 +1579,14 @@
                     </div>
                 `;
                 container.innerHTML += card;
+            });
+
+            document.querySelectorAll('.card-title').forEach(title => {
+                const isTruncated = title.scrollHeight > title.clientHeight;
+                if (isTruncated) {
+                    title.style.cursor = 'pointer';
+                    title.title = 'Cliquez pour voir le titre complet';
+                }
             });
         }
 
